@@ -21,10 +21,10 @@ public class FileUploadServiceImpl implements FileUploadService {
     private UserRepository userRepository;
 
     @Override
-    public String saveFile(String username, String path, MultipartFile file) {
+    public int saveFile(String username, String path, MultipartFile file) throws Exception {
         if (userRepository.findUserByUsername(username) == null) {
             log.info("用户 {} 不存在，无法上传文件", username);
-            return "文件上传失败，" + "用户 " + username + " 不存在";
+            throw new Exception("文件上传失败，" + "用户 " + username + " 不存在");
         }
 
         CommonsMultipartFile commonsMultipartFile = (CommonsMultipartFile) file;
@@ -36,17 +36,27 @@ public class FileUploadServiceImpl implements FileUploadService {
             file.transferTo(newFile);
         } catch (IOException e) {
             log.warn("文件 {} 上传失败", fileName);
-            return "文件上传失败，文件数据异常";
+            throw new Exception("文件上传失败，文件数据异常");
         }
 
-        String currentTime = String.valueOf(TimeUtil.getCurrentTime());
+        String currentTime = updateTime(username);
+        int paThreshold = getPaThreshold(username);
+        log.info("用户 {} 于 {} 成功上传文件 {}，阈值为 {}", username, currentTime, fileName, paThreshold);
+
+        return paThreshold;
+    }
+
+    public String updateTime(String username) {
+        String currentTime = TimeUtil.getCurrentTimeStr(TimeUtil.FORMAT_MINUTE);
         // 更新用户最近更新时间
         long res = userRepository.updateRecentLogUpdateTime(username, currentTime);
         if (res == 0) {
             log.warn("用户 {} 更新最近日志更新时间失败", username);
         }
+        return currentTime;
+    }
 
-        log.info("用户 {} 于 {} 成功上传文件 {}", username, currentTime, fileName);
-        return null;
+    public int getPaThreshold(String username) {
+        return userRepository.findUserByUsername(username).getPa_threshold();
     }
 }

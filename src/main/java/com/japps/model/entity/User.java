@@ -24,6 +24,8 @@ public class User {
 
     private int app_status;
 
+    private int pa_threshold;
+
     public User(UserDto userDto) {
         this.username = userDto.getUsername();
         this.telephone = userDto.getTelephone();

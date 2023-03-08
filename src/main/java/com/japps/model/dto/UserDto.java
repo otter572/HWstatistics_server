@@ -1,12 +1,14 @@
 package com.japps.model.dto;
 
-import com.japps.model.vo.UserVo;
+import com.japps.model.entity.User;
 import lombok.Data;
 
 @Data
 public class UserDto {
 
     private String username;
+
+    private String recentLogUpdateTime;
 
     private String telephone;
 
@@ -16,11 +18,15 @@ public class UserDto {
 
     private String startFrom;
 
-    public UserDto(UserVo userVo) {
-        this.username = userVo.getUsername();
-        this.telephone = userVo.getTelephone();
-        this.occupation = userVo.getOccupation();
-        this.device = userVo.getDevice();
-        this.startFrom = userVo.getStartFrom();
+    private String fromLastUpdate;
+
+    public UserDto(User user) {
+        this.username = user.getUsername();
+        this.recentLogUpdateTime = user.getRecent_log_update_time();
+        this.telephone = user.getTelephone();
+        this.occupation = user.getOccupation();
+        this.device = user.getDevice();
+        this.startFrom = user.getStart_from();
     }
+
 }

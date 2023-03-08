@@ -1,5 +1,6 @@
 package com.japps.control;
 
+import com.japps.model.vo.UploadVo;
 import com.japps.service.FileUploadService;
 import com.japps.utils.ResultBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ public class FileUploadController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public ResultBean upload(String username, String path, MultipartFile file) {
-        String res = fileUploadService.saveFile(username, path, file);
-        if (res != null) {
-            return new ResultBean<>(new Exception(res));
+        int res = -1;
+        try {
+            res = fileUploadService.saveFile(username, path, file);
+        } catch (Exception e) {
+            return new ResultBean<>(e);
         }
-        return new ResultBean<>();
+        return new ResultBean<>(new UploadVo(res));
     }
 
 }

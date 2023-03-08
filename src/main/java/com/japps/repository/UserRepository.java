@@ -3,6 +3,8 @@ package com.japps.repository;
 import com.japps.model.dto.UserDto;
 import com.japps.model.entity.User;
 
+import java.util.List;
+
 public interface UserRepository {
 
     /**
@@ -29,4 +31,11 @@ public interface UserRepository {
      * @return {@link String}
      */
     String insertOneUser(UserDto userDto);
+
+    /**
+     * 查找所有用户
+     *
+     * @return {@link List}<{@link User}>
+     */
+    List<User> findAllUser();
 }

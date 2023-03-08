@@ -2,7 +2,9 @@ package com.japps.service;
 
 import com.japps.model.dto.UserDto;
 
-public interface RegisterService {
+import java.util.List;
+
+public interface UserService {
 
     /**
      * 新用户注册，返回用户id
@@ -12,4 +14,11 @@ public interface RegisterService {
      * @throws Exception 注册失败信息
      */
     String register(UserDto userDto) throws Exception;
+
+    /**
+     * 获得所有用户的信息
+     *
+     * @return {@link UserDto[]}
+     */
+    List<UserDto> getUsers();
 }

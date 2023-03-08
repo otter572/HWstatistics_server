@@ -1,16 +1,20 @@
 package com.japps.service.impl;
 
 import com.japps.model.dto.UserDto;
+import com.japps.model.entity.User;
 import com.japps.repository.UserRepository;
-import com.japps.service.RegisterService;
+import com.japps.service.UserService;
+import com.japps.utils.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
-public class RegisterServiceImpl implements RegisterService {
+public class UserServiceImpl implements UserService {
 
     @Resource
     private UserRepository userRepository;
@@ -32,4 +36,23 @@ public class RegisterServiceImpl implements RegisterService {
         log.info("用户 {} 注册成功，id为 {} ", username, id);
         return id;
     }
+
+    @Override
+    public List<UserDto> getUsers() {
+        List<User> users = userRepository.findAllUser();
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : users) {
+            UserDto userDto = new UserDto(user);
+            String recentLogUpdateTime = userDto.getRecentLogUpdateTime();
+            if ("0".equals(recentLogUpdateTime)) {
+                userDto.setFromLastUpdate("user never upload");
+            }
+            else {
+                userDto.setFromLastUpdate(TimeUtil.countDiffToPresent(recentLogUpdateTime));
+            }
+            userDtos.add(userDto);
+        }
+        return userDtos;
+    }
+
 }
