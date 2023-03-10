@@ -41,6 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
         User user = new User(userDto);
         user.setRecent_log_update_time("0");
         user.setPa_threshold(FileConstant.DEFAULT_PA_THRESHOLD);
+        user.setInfo_file_update_time("0");
         User result = mongoTemplate.insert(user, COLLECTION_USER);
         return result == null ? null : result.get_id();
     }
@@ -48,5 +49,13 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> findAllUser() {
         return mongoTemplate.findAll(User.class, COLLECTION_USER);
+    }
+
+    @Override
+    public long updateInfoFileUpdateTime(String username, String time) {
+        Query query = new Query(Criteria.where("username").is(username));
+        Update update = new Update().set("info_file_update_time", time);
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, User.class, COLLECTION_USER);
+        return updateResult.getMatchedCount();
     }
 }
