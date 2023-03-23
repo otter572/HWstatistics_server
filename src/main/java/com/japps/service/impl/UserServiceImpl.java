@@ -59,6 +59,19 @@ public class UserServiceImpl implements UserService {
             }
             userDtos.add(userDto);
         }
+        // 排序返回
+        // 1. info文件更新时间越近，排越上面
+        // 2. 最近文件时间越晚，排越上面
+        userDtos.sort((o1, o2) -> {
+            String info1 = o1.getInfoFileUpdateTime();
+            String info2 = o2.getInfoFileUpdateTime();
+            if (info1.equals(info2)) {
+                String update1 = o1.getFromLastUpdate();
+                String update2 = o2.getFromLastUpdate();
+                return TimeUtil.diffToHours(update1) - TimeUtil.diffToHours(update2);
+            }
+            return TimeUtil.diffToHours(info1) - TimeUtil.diffToHours(info2);
+        });
         return userDtos;
     }
 
