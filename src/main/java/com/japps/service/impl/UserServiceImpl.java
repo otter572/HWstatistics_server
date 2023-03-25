@@ -46,31 +46,23 @@ public class UserServiceImpl implements UserService {
             String recentLogUpdateTime = userDto.getRecentLogUpdateTime();
             if ("0".equals(recentLogUpdateTime)) {
                 userDto.setFromLastUpdate("user never upload");
-            }
-            else {
+            } else {
                 userDto.setFromLastUpdate(TimeUtil.countDiffToPresent(recentLogUpdateTime));
             }
             String infoFileUpdateTime = userDto.getInfoFileUpdateTime();
             if ("0".equals(infoFileUpdateTime)) {
                 userDto.setInfoFileUpdateTime("user never upload");
-            }
-            else {
+            } else {
                 userDto.setInfoFileUpdateTime(TimeUtil.countDiffToPresent(infoFileUpdateTime));
             }
             userDtos.add(userDto);
         }
         // 排序返回
-        // 1. info文件更新时间越近，排越上面
-        // 2. 最近文件时间越晚，排越上面
+        // 1. 上一次文件上传时间距离现在越久的排在越上面
         userDtos.sort((o1, o2) -> {
-            String info1 = o1.getInfoFileUpdateTime();
-            String info2 = o2.getInfoFileUpdateTime();
-            if (info1.equals(info2)) {
-                String update1 = o1.getFromLastUpdate();
-                String update2 = o2.getFromLastUpdate();
-                return TimeUtil.diffToHours(update1) - TimeUtil.diffToHours(update2);
-            }
-            return TimeUtil.diffToHours(info1) - TimeUtil.diffToHours(info2);
+            String update1 = o1.getFromLastUpdate();
+            String update2 = o2.getFromLastUpdate();
+            return TimeUtil.diffToHours(update2) - TimeUtil.diffToHours(update1);
         });
         return userDtos;
     }
