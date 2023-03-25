@@ -52,4 +52,14 @@ public class UserController {
         }
         return new ResultBean(new UsersVo(fileUpdate));
     }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    public ResultBean deleteUser(String username) {
+        try {
+            userService.deleteUser(username);
+        } catch (Exception e) {
+            return new ResultBean<>(e);
+        }
+        return new ResultBean();
+    }
 }

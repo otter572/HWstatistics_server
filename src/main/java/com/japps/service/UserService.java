@@ -21,4 +21,13 @@ public interface UserService {
      * @return {@link UserDto[]}
      */
     List<UserDto> getUsers();
+
+    /**
+     * 删除用户
+     *
+     * @param username 用户名
+     * @return {@link String}
+     * @throws Exception 异常
+     */
+    String deleteUser(String username) throws Exception;
 }

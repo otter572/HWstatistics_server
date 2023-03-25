@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
         // 添加新用户
         String id = userRepository.insertOneUser(userDto);
         if (id == null) {
-            log.info("用户 {} 注册失败：数据库插入失败", username);
+            log.warn("用户 {} 注册失败：数据库插入失败", username);
             throw new Exception("数据库插入失败");
         }
         log.info("用户 {} 注册成功，id为 {} ", username, id);
@@ -65,6 +65,21 @@ public class UserServiceImpl implements UserService {
             return TimeUtil.diffToHours(update2) - TimeUtil.diffToHours(update1);
         });
         return userDtos;
+    }
+
+    @Override
+    public String deleteUser(String username) throws Exception {
+        if (userRepository.findUserByUsername(username) == null) {
+            log.info("用户 {} 删除失败：用户名不存在", username);
+            throw new Exception("用户名不存在");
+        }
+        long result = userRepository.deleteUserByUsername(username);
+        if (result == 0) {
+            log.warn("用户 {} 删除失败：数据库删除失败", username);
+            throw new Exception("数据库删除失败");
+        }
+        log.info("用户 {} 删除成功", username);
+        return username;
     }
 
 }

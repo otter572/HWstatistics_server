@@ -47,4 +47,12 @@ public interface UserRepository {
      * @return long
      */
     long updateInfoFileUpdateTime(String username, String time);
+
+    /**
+     * 根据用户名删除用户
+     *
+     * @param username 用户名
+     * @return {@link String}
+     */
+    long deleteUserByUsername(String username);
 }

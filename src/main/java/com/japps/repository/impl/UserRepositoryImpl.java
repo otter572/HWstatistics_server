@@ -4,6 +4,7 @@ import com.japps.constants.FileConstant;
 import com.japps.model.dto.UserDto;
 import com.japps.model.entity.User;
 import com.japps.repository.UserRepository;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -57,5 +58,13 @@ public class UserRepositoryImpl implements UserRepository {
         Update update = new Update().set("info_file_update_time", time);
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, User.class, COLLECTION_USER);
         return updateResult.getMatchedCount();
+    }
+
+    @Override
+    public long deleteUserByUsername(String username) {
+        Query query = new Query(Criteria.where("username").is(username));
+        DeleteResult deleteResult = mongoTemplate.remove(query, User.class);
+        long count = deleteResult.getDeletedCount();
+        return count;
     }
 }
