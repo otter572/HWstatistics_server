@@ -8,6 +8,6 @@ public class FileConstant {
 
     public static final String FILE_SAVE_PATH = "/root/HWStatistics/file";
 
-    public static final int DEFAULT_PA_THRESHOLD = 180;
+    public static final int DEFAULT_PA_THRESHOLD = 60;
 
 }
